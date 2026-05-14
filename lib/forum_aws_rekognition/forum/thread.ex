@@ -5,7 +5,7 @@ defmodule ForumAwsRekognition.Forum.Thread do
   schema "threads" do
     field :title, :string
     field :body, :string
-    field :user_id, :id
+    belongs_to :user, ForumAwsRekognition.Accounts.User
 
     timestamps(type: :utc_datetime)
   end

@@ -7,6 +7,19 @@
 # General application configuration
 import Config
 
+config :forum_aws_rekognition, :scopes,
+  user: [
+    default: true,
+    module: ForumAwsRekognition.Accounts.Scope,
+    assign_key: :current_scope,
+    access_path: [:user, :id],
+    schema_key: :user_id,
+    schema_type: :id,
+    schema_table: :users,
+    test_data_fixture: ForumAwsRekognition.AccountsFixtures,
+    test_setup_helper: :register_and_log_in_user
+  ]
+
 config :forum_aws_rekognition,
   ecto_repos: [ForumAwsRekognition.Repo],
   generators: [timestamp_type: :utc_datetime]

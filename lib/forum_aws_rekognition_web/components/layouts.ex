@@ -35,38 +35,62 @@ defmodule ForumAwsRekognitionWeb.Layouts do
 
   def app(assigns) do
     ~H"""
-    <header class="navbar px-4 sm:px-6 lg:px-8">
-      <div class="flex-1">
-        <a href="/" class="flex-1 flex w-fit items-center gap-2">
-          <img src={~p"/images/logo.svg"} width="36" />
-          <span class="text-sm font-semibold">v{Application.spec(:phoenix, :vsn)}</span>
-        </a>
-      </div>
-      <div class="flex-none">
-        <ul class="flex flex-column px-1 space-x-4 items-center">
-          <li>
-            <a href="https://phoenixframework.org/" class="btn btn-ghost">Website</a>
-          </li>
-          <li>
-            <a href="https://github.com/phoenixframework/phoenix" class="btn btn-ghost">GitHub</a>
-          </li>
-          <li>
-            <.theme_toggle />
-          </li>
-          <li>
-            <a href="https://hexdocs.pm/phoenix/overview.html" class="btn btn-primary">
-              Get Started <span aria-hidden="true">&rarr;</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </header>
+    <div class="min-h-screen flex flex-col">
+      <header class="navbar bg-base-100 border-b border-base-300 px-4 sm:px-6 lg:px-8 sticky top-0 z-50 shadow-sm">
+        <div class="flex-1 gap-4">
+          <a href="/" class="flex items-center gap-2 font-bold text-lg text-base-content hover:text-primary transition-colors">
+            <.icon name="hero-chat-bubble-left-right" class="size-6 text-primary" />
+            <span>Forum</span>
+          </a>
+          <%= if @current_scope do %>
+            <nav class="hidden md:flex items-center">
+              <.link navigate={~p"/threads"} class="btn btn-ghost btn-sm gap-1.5">
+                <.icon name="hero-queue-list" class="size-4" /> Threads
+              </.link>
+            </nav>
+          <% end %>
+        </div>
 
-    <main class="px-4 py-20 sm:px-6 lg:px-8">
-      <div class="mx-auto max-w-2xl space-y-4">
-        {render_slot(@inner_block)}
-      </div>
-    </main>
+        <div class="flex-none flex items-center gap-2">
+          <.theme_toggle />
+          <%= if @current_scope do %>
+            <div class="dropdown dropdown-end">
+              <div tabindex="0" role="button" class="btn btn-ghost btn-sm gap-1.5">
+                <div class="size-7 rounded-full bg-primary text-primary-content text-xs font-bold flex items-center justify-center shrink-0">
+                  {String.upcase(String.at(@current_scope.user.email, 0))}
+                </div>
+                <.icon name="hero-chevron-down-micro" class="size-3 opacity-60" />
+              </div>
+              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-50 w-56 p-2 shadow-lg border border-base-300 mt-2">
+                <li class="px-3 py-1.5">
+                  <span class="text-xs text-base-content/50 font-medium truncate block">{@current_scope.user.email}</span>
+                </li>
+                <div class="divider my-1"></div>
+                <li>
+                  <.link href={~p"/users/settings"} class="flex items-center gap-2">
+                    <.icon name="hero-cog-6-tooth" class="size-4" /> Settings
+                  </.link>
+                </li>
+                <li>
+                  <.link href={~p"/users/log-out"} method="delete" class="flex items-center gap-2 text-error">
+                    <.icon name="hero-arrow-right-on-rectangle" class="size-4" /> Log out
+                  </.link>
+                </li>
+              </ul>
+            </div>
+          <% else %>
+            <.link href={~p"/users/register"} class="btn btn-ghost btn-sm">Register</.link>
+            <.link href={~p"/users/log-in"} class="btn btn-primary btn-sm">Log in</.link>
+          <% end %>
+        </div>
+      </header>
+
+      <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 bg-base-200">
+        <div class="mx-auto max-w-4xl">
+          {render_slot(@inner_block)}
+        </div>
+      </main>
+    </div>
 
     <.flash_group flash={@flash} />
     """

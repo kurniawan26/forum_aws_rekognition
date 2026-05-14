@@ -5,9 +5,11 @@ defmodule ForumAwsRekognition.Forum do
 
   import Ecto.Query, warn: false
   alias ForumAwsRekognition.Repo
+  alias Scope
 
   alias ForumAwsRekognition.Forum.Thread
   alias ForumAwsRekognition.Accounts.Scope
+  alias ForumAwsRekognition.Forum.Post
 
   @doc """
   Subscribes to scoped notifications about any thread changes.
@@ -144,9 +146,6 @@ defmodule ForumAwsRekognition.Forum do
 
     Thread.changeset(thread, attrs, scope)
   end
-
-  alias ForumAwsRekognition.Forum.Post
-  alias ForumAwsRekognition.Accounts.Scope
 
   @doc """
   Subscribes to scoped notifications about any post changes.

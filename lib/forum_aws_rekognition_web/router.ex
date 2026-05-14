@@ -54,6 +54,11 @@ defmodule ForumAwsRekognitionWeb.Router do
       on_mount: [{ForumAwsRekognitionWeb.UserAuth, :require_authenticated}] do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
+
+      live "/threads", ThreadLive.Index, :index
+      live "/threads/new", ThreadLive.Form, :new
+      live "/threads/:id", ThreadLive.Show, :show
+      live "/threads/:id/edit", ThreadLive.Form, :edit
     end
 
     post "/users/update-password", UserSessionController, :update_password

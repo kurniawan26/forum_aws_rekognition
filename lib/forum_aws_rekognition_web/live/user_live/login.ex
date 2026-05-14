@@ -93,9 +93,4 @@ defmodule ForumAwsRekognitionWeb.UserLive.Login do
      |> put_flash(:info, info)
      |> push_navigate(to: ~p"/users/log-in")}
   end
-
-  defp local_mail_adapter? do
-    Application.get_env(:forum_aws_rekognition, ForumAwsRekognition.Mailer)[:adapter] ==
-      Swoosh.Adapters.Local
-  end
 end

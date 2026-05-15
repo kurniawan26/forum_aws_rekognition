@@ -23,6 +23,11 @@ defmodule ForumAwsRekognitionWeb.Router do
     get "/", PageController, :home
   end
 
+  scope "/health", ForumAwsRekognitionWeb do
+    pipe_through :api
+    get "/", HealthController, :check
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", ForumAwsRekognitionWeb do
   #   pipe_through :api

@@ -1,0 +1,39 @@
+# Build artifacts
+_build/
+deps/
+.elixir_ls/
+
+# Test & dev
+cover/
+doc/
+tmp/
+test/
+
+# Node
+assets/node_modules/
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# Terraform
+terraform/
+
+# Static generated
+priv/static/assets/
+priv/static/cache_manifest.json
+
+# Secrets & env
+.env
+.env.*
+*.tfvars
+
+# Logs & misc
+*.log
+erl_crash.dump
+forum_aws_rekognition-*.tar

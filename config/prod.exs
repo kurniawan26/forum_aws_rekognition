@@ -8,15 +8,12 @@ import Config
 config :forum_aws_rekognition, ForumAwsRekognitionWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json"
 
-# Force using SSL in production. This also sets the "strict-security-transport" header,
-# known as HSTS. If you have a health check endpoint, you may want to exclude it below.
-# Note `:force_ssl` is required to be set at compile-time.
+# force_ssl aktif — aman karena Cloudflare mengirim X-Forwarded-Proto: https.
+# Phoenix membaca header ini (rewrite_on) dan mengetahui koneksi user sudah HTTPS.
+# /health dikecualikan agar health check EC2 tidak kena redirect.
 config :forum_aws_rekognition, ForumAwsRekognitionWeb.Endpoint,
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
-  exclude: [
-    # paths: ["/health"],
-    hosts: ["localhost", "127.0.0.1"]
-  ]
+  exclude: [paths: ["/health"]]
 
 # Configure Swoosh API Client
 config :swoosh, api_client: Swoosh.ApiClient.Req

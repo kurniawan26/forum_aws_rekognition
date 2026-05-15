@@ -1,0 +1,48 @@
+services:
+  app:
+    image: forum-aws-rekognition:local
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      PHX_SERVER: "true"
+      PHX_HOST: "localhost"
+      PORT: "4000"
+      DATABASE_URL: "ecto://postgres:postgres@db:5432/forum_aws_rekognition_prod"
+      SECRET_KEY_BASE: "${SECRET_KEY_BASE}"
+      AWS_REGION: "${AWS_REGION:-ap-southeast-1}"
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+      S3_BUCKET_NAME: "${S3_BUCKET_NAME}"
+      POOL_SIZE: "5"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - forum-net
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: forum_aws_rekognition_prod
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - forum-net
+
+volumes:
+  postgres_data:
+
+networks:
+  forum-net:
+    driver: bridge

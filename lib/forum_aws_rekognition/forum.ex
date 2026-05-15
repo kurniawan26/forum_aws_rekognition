@@ -16,25 +16,26 @@ defmodule ForumAwsRekognition.Forum do
   # Thread PubSub
   # ---------------------------------------------------------------------------
 
-  def subscribe_threads(%Scope{} = scope) do
-    Phoenix.PubSub.subscribe(ForumAwsRekognition.PubSub, "user:#{scope.user.id}:threads")
+  def subscribe_threads(_scope \\ nil) do
+    Phoenix.PubSub.subscribe(ForumAwsRekognition.PubSub, "threads")
   end
 
-  defp broadcast_thread(%Scope{} = scope, message) do
-    Phoenix.PubSub.broadcast(ForumAwsRekognition.PubSub, "user:#{scope.user.id}:threads", message)
+  defp broadcast_thread(_scope, message) do
+    Phoenix.PubSub.broadcast(ForumAwsRekognition.PubSub, "threads", message)
   end
 
   # ---------------------------------------------------------------------------
   # Thread CRUD
   # ---------------------------------------------------------------------------
 
-  def list_threads(%Scope{} = scope) do
-    Repo.all_by(Thread, user_id: scope.user.id)
+  def list_threads(_scope \\ nil) do
+    from(t in Thread, order_by: [desc: t.inserted_at], preload: [:user])
+    |> Repo.all()
   end
 
-  def get_thread!(%Scope{} = scope, id) do
+  def get_thread!(_scope \\ nil, id) do
     Thread
-    |> Repo.get_by!(id: to_id(id), user_id: scope.user.id)
+    |> Repo.get!(to_id(id))
     |> Repo.preload(:user)
   end
 
@@ -70,7 +71,6 @@ defmodule ForumAwsRekognition.Forum do
   end
 
   def change_thread(%Scope{} = scope, %Thread{} = thread, attrs \\ %{}) do
-    true = thread.user_id == scope.user.id
     Thread.changeset(thread, attrs, scope)
   end
 

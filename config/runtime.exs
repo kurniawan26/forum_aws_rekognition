@@ -1,5 +1,11 @@
 import Config
 
+if config_env() != :prod do
+  Dotenvy.source!([".env"])
+  |> Map.merge(System.get_env())
+  |> System.put_env()
+end
+
 # config/runtime.exs is executed for all environments, including
 # during releases. It is executed after compilation and before the
 # system starts, so it is typically used to load production configuration
@@ -22,6 +28,19 @@ end
 
 config :forum_aws_rekognition, ForumAwsRekognitionWeb.Endpoint,
   http: [port: String.to_integer(System.get_env("PORT", "4000"))]
+
+config :ex_aws,
+  access_key_id: System.get_env("R2_ACCESS_KEY_ID", ""),
+  secret_access_key: System.get_env("R2_SECRET_ACCESS_KEY", ""),
+  s3: [
+    scheme: "https://",
+    host: System.get_env("R2_ENDPOINT_HOST", ""),
+    region: "auto"
+  ]
+
+config :forum_aws_rekognition, :r2,
+  bucket: System.get_env("R2_BUCKET", "forum-images"),
+  public_url: System.get_env("R2_PUBLIC_URL", "")
 
 if config_env() == :prod do
   database_url =

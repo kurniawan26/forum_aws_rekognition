@@ -18,6 +18,32 @@ defmodule ForumAwsRekognitionWeb.ThreadLive.Show do
         </div>
 
         <article class="card bg-base-100 border border-base-300">
+          <div :if={@thread.image_url} class="overflow-hidden rounded-t-2xl relative">
+            <img
+              id="thread-cover-image"
+              src={@thread.image_url}
+              class={["w-full max-h-80 object-cover transition-all duration-500", @thread.image_warning && "blur-xl"]}
+            />
+            <div
+              :if={@thread.image_warning}
+              id="image-warning-overlay"
+              class="absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 bg-base-100/60 backdrop-blur-sm"
+            >
+              <.icon name="hero-exclamation-triangle" class="size-8 text-warning" />
+              <p class="text-sm font-medium text-center text-base-content max-w-sm leading-relaxed">
+                {@thread.image_warning}
+              </p>
+              <button
+                class="btn btn-sm btn-primary"
+                phx-click={
+                  JS.remove_class("blur-xl", to: "#thread-cover-image")
+                  |> JS.hide(to: "#image-warning-overlay")
+                }
+              >
+                <.icon name="hero-eye" class="size-4" /> Lihat Gambar
+              </button>
+            </div>
+          </div>
           <div class="card-body gap-4 p-6 sm:p-8">
             <div class="flex gap-4">
               <div class="flex flex-col items-center gap-1 shrink-0 pt-1">
@@ -49,7 +75,7 @@ defmodule ForumAwsRekognitionWeb.ThreadLive.Show do
               <div class="flex-1 min-w-0">
                 <div class="flex items-start justify-between gap-4">
                   <h1 class="text-2xl font-bold text-base-content leading-snug">{@thread.title}</h1>
-                  <.button variant="primary" navigate={~p"/threads/#{@thread}/edit?return_to=show"}>
+                  <.button :if={@thread.user_id == @current_scope.user.id} variant="primary" navigate={~p"/threads/#{@thread}/edit?return_to=show"}>
                     <.icon name="hero-pencil-square" class="size-4" /> Edit
                   </.button>
                 </div>

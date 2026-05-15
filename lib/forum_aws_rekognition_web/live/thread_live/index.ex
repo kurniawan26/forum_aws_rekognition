@@ -26,6 +26,15 @@ defmodule ForumAwsRekognitionWeb.ThreadLive.Index do
           >
             <div class="card-body p-5">
               <div class="flex items-start gap-4">
+                <.link :if={thread.image_url} navigate={~p"/threads/#{thread}"} class="relative shrink-0">
+                  <img
+                    src={thread.image_url}
+                    class={["size-16 rounded-lg object-cover border border-base-200", thread.image_warning && "blur-sm"]}
+                  />
+                  <div :if={thread.image_warning} class="absolute inset-0 rounded-lg flex items-center justify-center bg-base-100/40" title={thread.image_warning}>
+                    <.icon name="hero-eye-slash" class="size-5 text-base-content/70" />
+                  </div>
+                </.link>
                 <div class="flex-1 min-w-0">
                   <.link navigate={~p"/threads/#{thread}"} class="block group">
                     <h2 class="font-semibold text-base-content group-hover:text-primary transition-colors">
@@ -34,7 +43,7 @@ defmodule ForumAwsRekognitionWeb.ThreadLive.Index do
                     <p class="text-sm text-base-content/60 mt-1 line-clamp-2">{thread.body}</p>
                   </.link>
                 </div>
-                <div class="flex gap-1 shrink-0">
+                <div :if={thread.user_id == @current_scope.user.id} class="flex gap-1 shrink-0">
                   <.link navigate={~p"/threads/#{thread}/edit"} class="btn btn-ghost btn-xs" title="Edit">
                     <.icon name="hero-pencil" class="size-3.5" />
                   </.link>

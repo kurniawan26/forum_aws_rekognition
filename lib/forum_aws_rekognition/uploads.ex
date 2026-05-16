@@ -2,9 +2,10 @@ defmodule ForumAwsRekognition.Uploads do
   def upload_thread_image(local_path, client_name) do
     ext = Path.extname(client_name) |> String.downcase()
     filename = "threads/#{Ecto.UUID.generate()}#{ext}"
-    r2 = Application.fetch_env!(:forum_aws_rekognition, :r2)
-    bucket = r2[:bucket]
-    public_url = r2[:public_url]
+    config = Application.fetch_env!(:forum_aws_rekognition, :uploads)
+    bucket = config[:bucket]
+    region = config[:region]
+    public_url = config[:public_url] || "https://#{bucket}.s3.#{region}.amazonaws.com"
 
     result =
       local_path

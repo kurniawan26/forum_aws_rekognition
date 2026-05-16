@@ -90,16 +90,6 @@ defmodule ForumAwsRekognition.Utils.Rekognition do
   end
 
   defp rekognition_config do
-    [
-      region:
-        System.get_env("AWS_REKOGNITION_REGION") ||
-          Application.get_env(:shared_services, :rekognition_region) || "ap-southeast-1",
-      access_key_id:
-        System.get_env("AWS_REKOGNITION_ACCESS_KEY_ID") ||
-          Application.get_env(:shared_services, :rekognition_access_key_id),
-      secret_access_key:
-        System.get_env("AWS_REKOGNITION_SECRET_ACCESS_KEY") ||
-          Application.get_env(:shared_services, :rekognition_secret_access_key)
-    ]
+    [region: System.get_env("AWS_REGION", "ap-southeast-1")]
   end
 end

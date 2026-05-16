@@ -30,17 +30,12 @@ config :forum_aws_rekognition, ForumAwsRekognitionWeb.Endpoint,
   http: [port: String.to_integer(System.get_env("PORT", "4000"))]
 
 config :ex_aws,
-  access_key_id: System.get_env("R2_ACCESS_KEY_ID", ""),
-  secret_access_key: System.get_env("R2_SECRET_ACCESS_KEY", ""),
-  s3: [
-    scheme: "https://",
-    host: System.get_env("R2_ENDPOINT_HOST", ""),
-    region: "auto"
-  ]
+  region: System.get_env("AWS_REGION", "ap-southeast-1")
 
-config :forum_aws_rekognition, :r2,
-  bucket: System.get_env("R2_BUCKET", "forum-images"),
-  public_url: System.get_env("R2_PUBLIC_URL", "")
+config :forum_aws_rekognition, :uploads,
+  bucket: System.get_env("S3_BUCKET_NAME", ""),
+  region: System.get_env("AWS_REGION", "ap-southeast-1"),
+  public_url: System.get_env("S3_PUBLIC_URL")
 
 if config_env() == :prod do
   database_url =
